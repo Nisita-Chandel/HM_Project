@@ -67,7 +67,7 @@ export default function LadiesPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <FashionHeroCard image={HERO_IMAGE} />
+          <FashionHeroCard image="https://fashiondream.co.in/cdn/shop/files/063A4521_b73794b1-c616-45c3-bb7c-286e53128cc0.jpg?v=1718358145&width=533" />
 
           <section className="mt-6">
             <h2 className="text-xl font-semibold mb-4">Featured styles</h2>
@@ -101,7 +101,12 @@ export default function LadiesPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="rounded-lg overflow-hidden border hover:shadow-md transition">
-              <img src={GALLERY_IMAGE} alt={`thumb-${i}`} className="w-full h-36 object-cover" />
+              <img src="https://i.pinimg.com/736x/84/00/84/840084636a988f79e9031e5ad55b3917.jpg" alt={`thumb-${i}`} className="w-full h-36 object-cover" />
+              <img src="https://i.pinimg.com/1200x/de/75/54/de7554a9855697271674e1b38e3c7f48.jpg" alt={`thumb-${i}`} className="w-full h-36 object-cover" />
+              <img src="https://i.pinimg.com/736x/8a/15/e8/8a15e8500344976127fd25f2e9c017a4.jpg" alt={`thumb-${i}`} className="w-full h-36 object-cover" />
+
+
+
             </div>
           ))}
         </div>

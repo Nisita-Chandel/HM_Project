@@ -79,7 +79,7 @@ export default function HMHomePage() {
           <div className="hidden md:block flex-1">
             {/* decorative card */}
             <div className="bg-white/5 backdrop-blur rounded-2xl p-4 max-w-sm shadow-2xl">
-              <img src={HERO_IMAGE} alt="dress preview" className="w-full h-48 object-cover rounded-xl border border-white/5" />
+              <img src="https://www.sunnderly.com/cdn/shop/files/C_UN_J_TX_1JPHV_ECF_X.png?v=1742982454&width=900" alt="dress preview" className="w-full h-48 object-cover rounded-xl border border-white/5" />
               <div className="mt-4">
                 <h3 className="text-white font-medium">Noces Couture — Editorial</h3>
                 <p className="text-white/70 text-sm mt-1">Editorial lookbook piece — couture gown with layered tulle.</p>
