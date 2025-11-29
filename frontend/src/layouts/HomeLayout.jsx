@@ -13,6 +13,10 @@ const HomeLayout = () => {
             </div>
             <div className="flex gap-5 text-lg">
             <NavLink
+                className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/home">
+                    Home
+                </NavLink>
+            <NavLink
                 className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/ladies">
                     Ladies
                 </NavLink>
@@ -24,10 +28,7 @@ const HomeLayout = () => {
                 className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/kids">
                   Kids  
                 </NavLink> 
-                <NavLink
-                className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/home">
-                    Home
-                </NavLink>
+               
                  <NavLink
                 className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/beauty">
                   Beauty  </NavLink>

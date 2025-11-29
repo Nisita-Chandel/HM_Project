@@ -14,6 +14,10 @@ const AppRouter = () => {
       element: <HomeLayout />,
       children: [
         {
+          path: "home",
+          element: <HomePage />,
+        },
+        {
           path: "ladies",
           element: <LadiesPage />,
         },
@@ -25,10 +29,7 @@ const AppRouter = () => {
           path: "kids",
           element: <KidsPage />,
         },
-        {
-          path: "home",
-          element: <HomePage />,
-        },
+       
         {
           path: "beauty",
           element: <BeautyPage />,
