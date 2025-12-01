@@ -7,12 +7,9 @@ const HomeLayout = () => {
     <div className="h-screen flex flex-col gap-4">
       <nav className="border-b border-gray-400 py-3 px-8 justify-between flex items-center">
          <div className='flex items-center gap-12'>
-            <div className='h-13 h-13'>
-                <img className='h-full w-full' src="https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg" alt="" />
-
-            </div>
+            
             <div className="flex gap-5 text-lg">
-            <NavLink
+               <NavLink
                 className = {({isActive}) => isActive ? "text-black" : "text-gry-400"} to = "/home">
                     Home
                 </NavLink>
