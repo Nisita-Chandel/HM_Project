@@ -2,10 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  items: [
-    // Example item structure:
-    // { id: "1", title: "Floral Layered Dress", price: 1299, qty: 1, img: "..." }
-  ],
+  items: [],
   totalItems: 0,
   totalAmount: 0,
 };
@@ -33,23 +30,20 @@ const cartSlice = createSlice({
       calcTotals(state);
     },
     removeFromCart: (state, action) => {
-      const id = action.payload;
-      state.items = state.items.filter((i) => i.id !== id);
+      state.items = state.items.filter((i) => i.id !== action.payload);
       calcTotals(state);
     },
     clearCart: (state) => {
       state.items = [];
       calcTotals(state);
     },
-    setCartFromApi: (state, action) => {
-      // optional, if you ever load cart from API
-      state.items = action.payload;
-      calcTotals(state);
-    },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart, setCartFromApi } =
-  cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+
+// safe selector
+export const selectCart = (state) =>
+  state.cart || { items: [], totalItems: 0, totalAmount: 0 };
 
 export default cartSlice.reducer;

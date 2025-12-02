@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import "remixicon/fonts/remixicon.css";
+
+.hello{
+    background-color: red;
+}

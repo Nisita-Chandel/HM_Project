@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import errorReducer from "../features/errorSlice"
+import errorReducer from "../features/errorSlice";
+import cartReducer from "./cartSlice";
 
 
 export const store = configureStore({
     reducer : {
         error : errorReducer,
+        cart: cartReducer
+
     },
 })

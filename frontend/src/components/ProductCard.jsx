@@ -7,7 +7,9 @@ export default function ProductCard({ product, onAdd, inCartQty }) {
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
       <img
         src={product.img}
-        alt={product.title}
+        alt={product.title
+          
+        }
         className="w-full h-98 object-cover"
       />
       <div className="p-4 flex-1 flex flex-col">

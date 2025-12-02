@@ -1,11 +1,10 @@
-// src/pages/CheckoutPage.jsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearCart } from "../store/cartSlice";
+import { selectCart, clearCart } from "../store/cartSlice";
 import useRazorpayPayment from "../payment/useRazorpayPayment";
 
 const CheckoutPage = () => {
-  const { items, totalAmount } = useSelector((state) => state.cart);
+  const { items, totalAmount } = useSelector(selectCart);
   const dispatch = useDispatch();
   const { openRazorpayCheckout } = useRazorpayPayment();
 
@@ -17,7 +16,6 @@ const CheckoutPage = () => {
         alert("Payment successful!");
       }
     } catch (err) {
-      console.error(err);
       alert("Payment failed or cancelled");
     }
   };
@@ -39,7 +37,7 @@ const CheckoutPage = () => {
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between border-b pb-3 last:border-b-0"
+            className="flex items-center justify-between border-b pb-3"
           >
             <div>
               <p className="font-medium">{item.title}</p>
