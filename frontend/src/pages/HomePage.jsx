@@ -1,5 +1,8 @@
-// src/HMApp.jsx
+// src/pages/HomePage.jsx
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart as addToCartRedux } from "../store/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 // ---------- SAMPLE DATA ----------
 const ladiesProducts = [
@@ -309,9 +312,9 @@ const beautyProducts = [
 ];
 
 // ---------- REUSABLE COMPONENTS ----------
-// 🔐 Auth Modal (Login + Signup)
+
 function AuthModal({ onClose }) {
-  const [mode, setMode] = useState("login"); // "login" ya "signup"
+  const [mode, setMode] = useState("login");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -326,7 +329,6 @@ function AuthModal({ onClose }) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl leading-none"
@@ -447,7 +449,13 @@ function AuthModal({ onClose }) {
   );
 }
 
-function Navbar({ activePage, setActivePage, cartCount, onSignInClick }) {
+function Navbar({
+  activePage,
+  setActivePage,
+  cartCount,
+  onSignInClick,
+  onCartClick,
+}) {
   const navItems = [
     { id: "home", label: "Home" },
     { id: "ladies", label: "Ladies" },
@@ -464,7 +472,7 @@ function Navbar({ activePage, setActivePage, cartCount, onSignInClick }) {
             <img
               className="h-full w-full"
               src="https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg"
-              alt=""
+              alt="H&M logo"
             />
           </div>
           <nav className="hidden md:flex items-center gap-5 text-sm">
@@ -488,7 +496,6 @@ function Navbar({ activePage, setActivePage, cartCount, onSignInClick }) {
         </div>
 
         <div className="flex items-center gap-4">
-          {/* 👉 Sign in opens modal */}
           <button
             onClick={onSignInClick}
             className="hidden sm:inline text-sm text-gray-600 hover:text-gray-900"
@@ -500,7 +507,7 @@ function Navbar({ activePage, setActivePage, cartCount, onSignInClick }) {
               <i className="ri-search-line"></i>
             </button>
             <button
-              onClick={() => setActivePage("cart")}
+              onClick={onCartClick}
               className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900 text-white text-sm hover:bg-gray-700"
             >
               🛒
@@ -548,9 +555,9 @@ function ProductCard({ product, onAdd, inCartQty }) {
   );
 }
 
-function ProductGrid({ title, subtitle, products, onAdd, cart }) {
+function ProductGrid({ title, subtitle, products, onAdd, cartItems }) {
   const [visibleCount, setVisibleCount] = useState(3);
-  const getQty = (id) => cart.find((i) => i.id === id)?.qty || 0;
+  const getQty = (id) => cartItems.find((i) => i.id === id)?.qty || 0;
 
   const visibleProducts = products.slice(0, visibleCount);
   const canShowMore = visibleCount < products.length;
@@ -590,74 +597,11 @@ function ProductGrid({ title, subtitle, products, onAdd, cart }) {
   );
 }
 
-function CartPage({ cart, onRemove, onClear }) {
-  const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-
-  return (
-    <main className="pt-24 pb-16 max-w-5xl mx-auto px-6">
-      <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
-      <p className="text-sm text-gray-500 mb-6">
-        Total items: <span className="font-semibold">{totalItems}</span>
-      </p>
-
-      {cart.length === 0 ? (
-        <p className="text-gray-500 text-sm">
-          Your cart is empty. Start adding some products from Ladies, Men, Kids
-          or Beauty pages.
-        </p>
-      ) : (
-        <>
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="flex gap-4 items-center bg-white rounded-xl border p-3"
-              >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-16 h-16 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{item.title}</p>
-                  <p className="text-xs text-gray-500">{item.price}</p>
-                  <p className="text-xs text-gray-500">
-                    Qty: <span className="font-semibold">{item.qty}</span>
-                  </p>
-                </div>
-                <button
-                  onClick={() => onRemove(item.id)}
-                  className="text-xs px-3 py-1 rounded-md border text-red-500 hover:bg-red-50"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 flex justify-between items-center">
-            <button
-              onClick={onClear}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Clear cart
-            </button>
-            <button className="px-5 py-2 rounded-full bg-gray-900 text-white text-sm">
-              Proceed to checkout
-            </button>
-          </div>
-        </>
-      )}
-    </main>
-  );
-}
-
 // ---------- PAGE SECTIONS ----------
 
 function HomeSection({ setActivePage }) {
   return (
     <main className="pt-24 pb-16 max-w-7xl mx-auto px-6">
-      {/* Hero */}
       <section className="grid md:grid-cols-2 gap-8 items-center">
         <div>
           <p className="text-xs tracking-[0.25em] text-gray-500 mb-2">
@@ -696,7 +640,7 @@ function HomeSection({ setActivePage }) {
             />
           </div>
           <div className="space-y-4">
-            <div className="rounded-3xl  overflow-hidden shadow-md h-72">
+            <div className="rounded-3xl overflow-hidden shadow-md h-72">
               <img
                 src="https://i.pinimg.com/736x/23/86/02/23860278614bf3b5d8fddc6862081568.jpg"
                 alt="home hero 2"
@@ -707,7 +651,6 @@ function HomeSection({ setActivePage }) {
         </div>
       </section>
 
-      {/* Category cards */}
       <section className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 ">
         <CategoryCard
           title="Ladies"
@@ -755,32 +698,29 @@ function CategoryCard({ title, desc, img, onClick }) {
   );
 }
 
-// ---------- ROOT APP ----------
+// ---------- ROOT PAGE COMPONENT ----------
 
-export default function HMApp() {
+export default function HomePage() {
   const [activePage, setActivePage] = useState("home");
-  const [cart, setCart] = useState([]);
-  const [showLogin, setShowLogin] = useState(false); // 🔐 login modal state
+  const [showLogin, setShowLogin] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
   const addToCart = (product) => {
-    setCart((prev) => {
-      const exist = prev.find((p) => p.id === product.id);
-      if (exist) {
-        return prev.map((p) =>
-          p.id === product.id ? { ...p, qty: p.qty + 1 } : p
-        );
-      }
-      return [...prev, { ...product, qty: 1 }];
-    });
+    const numericPrice = Number(String(product.price).replace(/[^\d]/g, ""));
+    dispatch(
+      addToCartRedux({
+        id: product.id,
+        title: product.title,
+        img: product.img,
+        price: numericPrice,
+      })
+    );
   };
-
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((p) => p.id !== id));
-  };
-
-  const clearCart = () => setCart([]);
-
-  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
   return (
     <div className="min-h-screen bg-slate-50 text-gray-900">
@@ -789,9 +729,9 @@ export default function HMApp() {
         setActivePage={setActivePage}
         cartCount={cartCount}
         onSignInClick={() => setShowLogin(true)}
+        onCartClick={() => navigate("/cart")} // ⬅ Go to Redux CartPage route
       />
 
-      {/* 🔐 Login modal render */}
       {showLogin && <AuthModal onClose={() => setShowLogin(false)} />}
 
       {activePage === "home" && <HomeSection setActivePage={setActivePage} />}
@@ -806,7 +746,7 @@ export default function HMApp() {
             title="Featured Dresses"
             products={ladiesProducts}
             onAdd={addToCart}
-            cart={cart}
+            cartItems={cartItems}
           />
         </main>
       )}
@@ -821,7 +761,7 @@ export default function HMApp() {
             title="Latest for Men"
             products={menProducts}
             onAdd={addToCart}
-            cart={cart}
+            cartItems={cartItems}
           />
         </main>
       )}
@@ -836,7 +776,7 @@ export default function HMApp() {
             title="Popular for Kids"
             products={kidsProducts}
             onAdd={addToCart}
-            cart={cart}
+            cartItems={cartItems}
           />
         </main>
       )}
@@ -851,20 +791,11 @@ export default function HMApp() {
             title="Top Beauty Picks"
             products={beautyProducts}
             onAdd={addToCart}
-            cart={cart}
+            cartItems={cartItems}
           />
         </main>
       )}
 
-      {activePage === "cart" && (
-        <CartPage
-          cart={cart}
-          onRemove={removeFromCart}
-          onClear={clearCart}
-        />
-      )}
-
-      {/* Simple footer */}
       <footer className="border-t bg-white mt-10">
         <div className="max-w-7xl mx-auto px-6 py-4 text-xs text-gray-500 flex justify-between">
           <span>© {new Date().getFullYear()} HM Demo Store</span>
