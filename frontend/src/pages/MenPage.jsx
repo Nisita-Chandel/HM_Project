@@ -3,87 +3,28 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart as addToCartRedux } from "../store/cartSlice";
 import { Link } from "react-router-dom";
+import MenProducts from "../data/MenProducts";
+import { Heart } from "lucide-react";
+import { toggleFavorite as toggleFavoriteRedux } from "../store/favoritesSlice";
 
-const menProducts = [
-  {
-    id: "men-1",
-    title: "Classic White Shirt",
-    price: "₹999",
-    img: "https://i.pinimg.com/1200x/63/fd/bd/63fdbdedb89857e6073bf673e8fc7aff.jpg",
-  },
-  {
-    id: "men-2",
-    title: "Navy Slim Fit Blazer",
-    price: "₹3,499",
-    img: "https://i.pinimg.com/1200x/e2/4e/d9/e24ed9e75bbd56d55bac1b280755f2eb.jpg",
-  },
-  {
-    id: "men-3",
-    title: "Casual Denim Jacket",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/56/95/c8/5695c85a9df6f65ef97e1b7722678ea1.jpg",
-  },
-  {
-    id: "men-4",
-    title: "Kurta Pajama",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/c7/c8/6a/c7c86a8c1f46196f185573b924c00585.jpg",
-  },
-  {
-    id: "men-5",
-    title: "Polo T-Shirt",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/27/0c/3b/270c3b8cf66354d1ce35601fa241fb7b.jpg",
-  },
-  {
-    id: "men-6",
-    title: "Hoodie",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/736x/43/73/a6/4373a6b4d4c70a8196351a1f74fe5487.jpg",
-  },
-  {
-    id: "men-7",
-    title: "Cargo Pants",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/83/58/69/835869e72b255e1949689eebf51943ab.jpg",
-  },
-  {
-    id: "men-8",
-    title: "Jacket",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/736x/ca/c4/0c/cac40cc202add705ea073fa1d54989b6.jpg",
-  },
-  {
-    id: "men-9",
-    title: "Coat",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/736x/52/d7/04/52d70483438d42f95cc5c48a8fb60390.jpg",
-  },
-  {
-    id: "men-10",
-    title: "Pathani Kurta",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/d7/f6/30/d7f6307f9f46557445d08056baec5a35.jpg",
-  },
-  {
-    id: "men-11",
-    title: "Sherwani",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/736x/2e/55/12/2e55129d381b4004a07eacde930313ae.jpg",
-  },
-  {
-    id: "men-12",
-    title: "Joggers",
-    price: "₹2,199",
-    img: "https://i.pinimg.com/1200x/85/f0/28/85f0289f76e2b6193495be759573aa09.jpg",
-  },
-];
-
-function ProductCard({ product, onAdd, inCartQty }) {
+function ProductCard({ product, onAdd, inCartQty, isFavorite, onToggleFavorite }) {
   const isInCart = inCartQty > 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col relative">
+      {/* ❤️ Favourite Heart */}
+      <button
+        type="button"
+        onClick={() => onToggleFavorite(product)}  // send full product object
+        className="absolute top-2 right-2 z-10 rounded-full bg-white/80 p-1.5 shadow-sm hover:bg-white"
+      >
+        <Heart
+          className={`w-4 h-4 ${
+            isFavorite ? "fill-red-500 text-red-500" : "text-gray-500"
+          }`}
+        />
+      </button>
+
       <img
         src={product.img}
         alt={product.title}
@@ -103,17 +44,25 @@ function ProductCard({ product, onAdd, inCartQty }) {
           >
             {isInCart ? `In Cart (${inCartQty})` : "Add to cart"}
           </button>
-          <button className="text-xs text-gray-500 hover:text-gray-800">
+
+          {/* View -> /men/:id */}
+          <Link
+            to={`/men/${product.id}`}
+            className="text-xs text-gray-500 hover:text-gray-800"
+          >
             View
-          </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-function ProductGrid({ products, onAdd, cartItems }) {
+function ProductGrid({ products, onAdd, cartItems, favorites, onToggleFavorite }) {
   const getQty = (id) => cartItems.find((i) => i.id === id)?.qty || 0;
+
+  const isFavoriteProduct = (id) =>
+    favorites.some((item) => item.id === id); // check by id in favorites array
 
   return (
     <section className="mt-8">
@@ -124,6 +73,8 @@ function ProductGrid({ products, onAdd, cartItems }) {
             product={p}
             onAdd={onAdd}
             inCartQty={getQty(p.id)}
+            isFavorite={isFavoriteProduct(p.id)}
+            onToggleFavorite={onToggleFavorite}
           />
         ))}
       </div>
@@ -134,6 +85,9 @@ function ProductGrid({ products, onAdd, cartItems }) {
 export default function MenPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+
+  // Same shape as FavoritesPage: array of product objects
+  const favorites = useSelector((state) => state.favorites.items);
 
   const addToCart = (product) => {
     const numericPrice = Number(String(product.price).replace(/[^\d]/g, ""));
@@ -147,6 +101,15 @@ export default function MenPage() {
     );
   };
 
+  const toggleFavorite = (product) => {
+    dispatch(
+      toggleFavoriteRedux({
+        ...product,
+        category: "men", // helpful for FavoritesPage routing later
+      })
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-gray-900 pt-10 pb-16">
       <main className="max-w-7xl mx-auto px-6">
@@ -155,12 +118,14 @@ export default function MenPage() {
             <p className="text-xs tracking-[0.25em] text-gray-500 mb-1">
               MEN · COLLECTION
             </p>
-            <h1 className="text-2xl md:text-3xl font-semibold">Men Collection</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold">
+              Men Collection
+            </h1>
             <p className="text-sm text-gray-500 mt-1">
               From office to weekend outfits.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <Link
               to="/cart"
               className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-gray-300 hover:bg-gray-100"
@@ -168,18 +133,26 @@ export default function MenPage() {
               🛒 Go to Cart
             </Link>
             <Link
+              to="/favorites"
+              className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline"
+            >
+              ❤️ View Favourites
+            </Link>
+            <Link
               to="/"
               className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline"
             >
               ← Back to Home
             </Link>
-          </div>
+          </div> */}
         </header>
 
         <ProductGrid
-          products={menProducts}
+          products={MenProducts}
           onAdd={addToCart}
           cartItems={cartItems}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
         />
       </main>
     </div>
