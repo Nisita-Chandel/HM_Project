@@ -3,6 +3,8 @@ import { Heart, Search, ShoppingBag, User } from "lucide-react";
 import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Footer from "../components/Footer";
+
 
 const HomeLayout = () => {
   const navigate = useNavigate();
@@ -72,6 +74,14 @@ const HomeLayout = () => {
             >
               Beauty
             </NavLink>
+            <NavLink to="/products" className={({ isActive }) =>
+                isActive ? "text-black font-semibold" : "text-gray-400"
+              }>
+             All Products 
+          </NavLink>
+          <NavLink to="/admin/add-product">Add Product</NavLink>
+
+            
           </div>
         </div>
 
@@ -125,6 +135,7 @@ const HomeLayout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
+      <Footer/>
     </div>
   );
 };

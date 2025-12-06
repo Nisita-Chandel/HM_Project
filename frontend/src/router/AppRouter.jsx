@@ -22,6 +22,9 @@ import CheckoutPage from "../pages/CheckoutPage.jsx";
 import FavoritesPage from "../pages/FavoritesPage.jsx";
 import AuthPage from "../pages/AuthPage.jsx";
 import SearchPage from "../pages/SearchPage.jsx";
+import ProductsPage from "../pages/ProductsPage.jsx";
+import AddProductPage from "../pages/AddProductPage.jsx";
+
 
 
 
@@ -55,6 +58,9 @@ export default function AppRouter() {
         <Route path="/auth" element={<AuthPage />} /> {/* 👈 new */}
           
        <Route path="/search" element={<SearchPage/>} />
+       <Route path= "/Products" element={<ProductsPage/>}/>
+       <Route path="/admin/add-product" element={<AddProductPage />} />
+
 
       </Route>
     </Routes>
